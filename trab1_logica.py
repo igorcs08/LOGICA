@@ -18,6 +18,7 @@ def qnt_parenteses(formula):
         return False
 
 # INDICE DE CADA PARENTESES
+"""
 def lista_indices(formula):
     i = 0
     indices = []
@@ -26,6 +27,41 @@ def lista_indices(formula):
             indices.append(i)
         i += 1
     return indices
+"""
+#NOME DA FUNCAO PRECISA MELHORAR
+def lista_indices(formula):
+    i = 0
+    abre = []    
+    lista_sub = []
+    while i < len(formula):        
+        if (formula[i] == '('):
+            abre.append(i)
+        elif (formula[i] == ')'):
+            inicio = abre.pop()            
+            lista_sub.append(formula[inicio:i+1])
+        i += 1
+    return lista_sub
+
+"""
+def separa(formula):
+    lista_sub.append(formula)
+    if (formula[0] == '(' and formula[-1] == ')'):
+        if (formula[1] == '(' and formula[-2] == ')'):
+            formula = formula[1:-1]
+    indexes = lista_indices(formula)
+    i = 0
+    j = len(indexes)
+    while (i < j):
+        print(j)
+        i = 0
+        print(len(indexes))
+        lista_sub.append(formula[indexes[i]:indexes[i+1]+1])
+        if len(indexes) >= 2:
+            indexes.pop(0)
+            indexes.pop(0)
+        j = len(indexes)
+        i += 1
+"""
 
 # VERIFICA SE E FORMULA OU NAO
 def isFormula(formula):    
@@ -100,43 +136,12 @@ def verificaAtomo(atomo, atomo2):
         return False
     return False
 
-"""
-def separa(formula):
-    ind = lista_indices(formula)
-    for i in ind:
-"""        
-
-"""
-def separa(formula):
-    ind = lista_indices(formula)
-    while i < len(formula):
-        if formula[i] and fo
-"""
-
-def separa(formula):
-    lista_sub.append(formula)
-    if (formula[0] == '(' and formula[-1] == ')'):
-        if (formula[1] == '(' and formula[-2] == ')'):
-            formula = formula[1:-1]
-    indexes = lista_indices(formula)
-    i = 0
-    j = len(indexes)
-    while (i < j):
-        print(j)
-        i = 0
-        print(len(indexes))
-        lista_sub.append(formula[indexes[i]:indexes[i+1]])
-        indexes.pop(0)
-        indexes.pop(1)
-        j = len(indexes)
-        i += 1
-
-
-a = "(p|q)>(~q&~p)"
+a = "((p|q)>(~q&~p))"
+a = "((p|q)>(~q&~p)&(p>(p>(p|q))))"
 #a = "p|~q"
 print(a)
 
 print(isFormula(a))
-separa(a)
-print(lista_sub)
+#separa(a)
+print(lista_indices(a))
     
