@@ -21,25 +21,32 @@ def qnt_parenteses(formula):
 def lista_indices(formula):
     i = 0
     abre = []
-    lista_sub = []
+    lsub = []
     while i < len(formula):
         if (formula[i] == '('):
             abre.append(i)
-        elif (formula[i] == ')'):
+        elif (formula[i] == ')'):                        
             inicio = abre.pop()
             if (formula[inicio-1] == conectivos[3]):
-                lista_sub.append(formula[inicio-1:i+1])
-            lista_sub.append(formula[inicio:i+1])
+                adicionar = formula[inicio-1:i+1]
+                if not (adicionar in lsub):
+                    lsub.append(formula[inicio-1:i+1])
+            adicionar = formula[inicio:i+1]
+            if not (adicionar in lsub):
+                lsub.append(formula[inicio:i+1])
         i += 1
-    return lista_sub
+    return lsub
 
 # VERIFICA SE E FORMULA OU NAO
 def isFormula(formula):    
     if ((len(formula) == 1) and (formula in alfabeto)):
-        return "E formula"
+        return True #E formula
     elif (formula[0] in conectivos[:3]):
-        return "Nao e formula"
-    elif (len(formula) > 1):
+        return False #Nao e formula
+    elif 1<len(formula)<3:
+        if (formula[0] == conectivos[3] and formula[1] in alfabeto):
+            return True #E formula
+    elif (len(formula) > 2):
         i = 0
         while i < len(formula)-1:
             if  verificaConectivo(formula[i], formula[i+1]) :
@@ -49,12 +56,12 @@ def isFormula(formula):
             elif verificaFechaParenteses(formula[i], formula[i+1]):
                 pass
             else:
-                return "Nao e formula"
+                return False #"Nao e formula"
             i += 1
-        return "E formula"
-    return "Nao e formula"
+        return True #"E formula"
+    return False #"Nao e formula"
 
-conec1 = conectivos[3:5]
+conec1 = [conectivos[3]]
 co = [auxiliares[0]]+conectivos
 conec1 += alfabeto
 conec1.append(auxiliares[0])
@@ -111,23 +118,28 @@ def lista_atomos(formula):
     i = 1
     latomos = []
     while (i<len(formula)):
-        if((formula[i] in alfabeto) and (formula[i-1] == conectivos[3])):            
-            latomos.append(formula[i-1] + formula[i])
-        elif (formula[i] in alfabeto):
+        if((formula[i-1] == conectivos[3]) and (formula[i] in alfabeto)):            
+            latomos.append(formula[i-1] + formula[i])            
+        if (formula[i] in alfabeto):
             if not (formula[i] in latomos):
                 latomos.append(formula[i])
         i += 1
     return latomos
 
+## LISTA PARA CASO DE TESTE
+lista = ['((p|q)>(~q&~p))', '(pq)&~(p|q)', 'p', '~p|q', '~(p&q)', '(~(p|q)>(~q&~p)&(p>~(p>(p|q))))']
 
-
-a = "((p|q)>(~q&~p))"
-a = "~((p|q)>(~q&~p)&(p>~(p>(p|q))))"
-print(a)
-
-print(isFormula(a))
-print("")
-lista_sub = lista_indices(a)
-lista_sub = lista_atomos(a) + lista_sub
-for i in lista_sub:
-    print(i)
+for a in lista:
+    print("ENTRADA: ", a)
+    if(isFormula(a)):
+        print("E formula")
+        print("")
+        print("SAIDA: ")
+        lista_sub = lista_indices(a)
+        lista_sub = lista_atomos(a) + lista_sub
+        for i in lista_sub:
+            print(i)
+        print("")
+    else:
+        print("Nao e formula")
+        print("")
